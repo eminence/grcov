@@ -131,7 +131,7 @@ fn add_html_ext(path: &Path) -> PathBuf {
     }
 }
 
-fn get_stats(result: &CovResult) -> HtmlStats {
+pub fn get_stats(result: &CovResult) -> HtmlStats {
     let total_lines = result.lines.len();
     let covered_lines = result.lines.values().filter(|x| **x > 0).count();
     let total_funs = result.functions.len();

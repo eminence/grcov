@@ -585,6 +585,30 @@ pub fn output_html(
     html::gen_coverage_json(&global.stats, &config, &output);
 }
 
+pub fn output_summary(results: CovResultIter, output_file: Option<&Path>) {
+    let mut output = get_target_output_writable(output_file);
+
+    let mut total_lines = 0;
+    let mut covered_lines = 0;
+    let mut total_funs = 0;
+    let mut covered_funs = 0;
+    let mut total_branches = 0;
+    let mut covered_branches = 0;
+
+    for (_, _, result) in results {
+        let stats = html::get_stats(&result);
+        total_lines += stats.total_lines;
+        covered_lines += stats.covered_lines;
+        total_funs += stats.total_funs;
+        covered_funs += stats.covered_funs;
+        total_branches += stats.total_branches;
+        covered_branches += stats.covered_branches
+    }
+
+    let l = covered_lines as f32 / total_lines as f32;
+    writeln!(output, "lines : {}% ({} of {} lines)", l, covered_lines, total_lines).unwrap();
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

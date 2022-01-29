@@ -28,6 +28,7 @@ enum OutputType {
     Covdir,
     Html,
     Cobertura,
+    Summary,
 }
 
 impl FromStr for OutputType {
@@ -43,6 +44,7 @@ impl FromStr for OutputType {
             "covdir" => Self::Covdir,
             "html" => Self::Html,
             "cobertura" => Self::Cobertura,
+            "summary" => Self::Summary,
             _ => return Err(format!("{} is not a supported output type", s)),
         })
     }
@@ -89,7 +91,8 @@ struct Opt {
             - *covdir* for the covdir recursive JSON format;\n\
             - *coveralls+* for the Coveralls specific format with function information;\n\
             - *ade* for the ActiveData-ETL specific format;\n\
-            - *files* to only return a list of files.\n\
+            - *files* to only return a list of files;\n\
+            - *summary* for a short text summary.\n\
         ",
         value_name = "OUTPUT TYPE",
         default_value = "lcov",
@@ -106,6 +109,7 @@ struct Opt {
             "covdir",
             "html",
             "cobertura",
+            "summary",
         ],
     )]
     output_type: OutputType,
@@ -453,5 +457,6 @@ fn main() {
             opt.output_path.as_deref(),
             demangle,
         ),
+        OutputType::Summary => output_summary(iterator, opt.output_path.as_deref())
     };
 }
